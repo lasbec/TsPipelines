@@ -26,8 +26,9 @@ export class PDA<State extends string, StackElement>{
         const stack:Array<StackElement> = [];
         for (const char of input) {
             assertChar(char);
-            const transition = this.transitions({stackTop:stack[stack.length -1], char, state});
-            if (!transition) return reject();
+            const args = {stackTop:stack[stack.length -1], char, state};
+            const transition = this.transitions(args);
+            if (!transition) return reject(`Undefined transition for ${JSON.stringify(args)}`);
             if(isFinalState(transition)) return transition;
             const [newState, stackOp] = transition;
             if (stackOp === "pop"){
@@ -37,9 +38,10 @@ export class PDA<State extends string, StackElement>{
             }
             state = newState
         }
-        const transition = this.transitions({stackTop:stack[stack.length -1],char: endOfInput(), state});
-        if (!transition) return reject();
+        const args = {stackTop:stack[stack.length -1], char:endOfInput(), state};
+        const transition = this.transitions(args);
+        if (!transition) return reject(`Undefined transition for ${JSON.stringify(args)}`);
         if(isFinalState(transition)) return transition;
-        return reject();
+        return reject(`Ended in state '${transition[0]}'`);
     }
 }

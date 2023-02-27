@@ -15,21 +15,21 @@ describe("PDA", ()=>{
         [ "}","{"],
         [ ">","<"],
     ])
-    const matchings = new Set(  [...parenthesisOpenToClose.entries()].map(([a,b]) => a+b).join());
+    const matchings = new Set(["()", "[]", "{}", "<>"]);
     const matchingParenthesis = new PDA<"S", string>(
         "S",
         new Set(["S"]),
 (args)=>  {
             if (isEndOfInput(args.char)) {
-                return args.stackTop === undefined ? accept() : reject();
+                return args.stackTop === undefined ? accept() : reject(`some stack left '${args.stackTop}'.`);
             }
             const closing = parenthesisCloseToOpen.has(args.char);
             if(closing){
                 const matches = matchings.has(args.stackTop + args.char);
-                if(!matches) return reject();
+                if(!matches) return reject(`Not matching parenthesis '${args.stackTop}' and '${args.char}'.`);
                 return ["S", "pop"]
             }
-            if(!parenthesisOpenToClose.has(args.char)) return reject();
+            if(!parenthesisOpenToClose.has(args.char)) return reject(`illegal character '${args.char}'.`);
             return ["S", {push:args.char}]
         }
     );
@@ -37,6 +37,6 @@ describe("PDA", ()=>{
         expect(matchingParenthesis.test("<{}{}[{{()}}]>()()")).toEqual(accept())
     })
     it("2", ()=>{
-        expect(matchingParenthesis.test("<{}{}[{{)}}]>()()")).toEqual(reject())
+        expect(matchingParenthesis.test("<{}{}[{{)}}]>()()")).toEqual(reject("Not matching parenthesis '{' and ')'."))
     })
 })

@@ -2,17 +2,18 @@ import { Char } from "../Utils/String/Char";
 
 export interface FinalState {
     accepted: boolean;
+    reason?: string;
 }
 export function isFinalState(state: string | FinalState | Array<any>): state is FinalState {
     return typeof  state !== "string" && !Array.isArray(state);
 }
 
-export function accept():FinalState{
-    return {accepted:true};
+export function accept(reason?:string):FinalState{
+    return {accepted:true, reason};
 }
 
-export function reject():FinalState{
-    return {accepted:false};
+export function reject(reason?: string):FinalState{
+    return {accepted:false, reason};
 }
 
 export interface Wildcard {
