@@ -2,11 +2,11 @@
  * Deterministic Finite Automata
  */
 import { describe, expect, it } from "vitest";
-import { DFA } from "../src/DeterministicFiniteAutomata";
+import { DFA } from "../src/Automata/DeterministicFiniteAutomata";
 import { asChar } from "../src/Utils/String/Char";
 
 
-describe("1",()=>{
+describe("DFA",()=>{
     // ^aA+Ende$
     const testDfa = new DFA(
         "s",

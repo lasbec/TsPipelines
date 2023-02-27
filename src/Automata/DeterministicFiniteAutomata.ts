@@ -1,14 +1,11 @@
-import { assertChar, Char } from "./Utils/String/Char";
+import { assertChar, Char } from "../Utils/String/Char";
+import { Automata, FinalState } from "./Interfaces";
 
-export interface FinalState  {
-    accepted: boolean;
-}
-
-export class DFA<State extends string> {
+export class DFA<State extends string> implements Automata {
     constructor(
         readonly start: State,
         readonly states: ReadonlySet<State>,
-        readonly transitions: ReadonlyArray<[State, Char | "", State | FinalState]>
+        readonly transitions: ReadonlyArray<[State, Char , State | FinalState] | [State, "",  FinalState]>
     ) {
     }
 
