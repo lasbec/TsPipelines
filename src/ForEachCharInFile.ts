@@ -1,5 +1,8 @@
 import * as fs from "fs";
 import { Writable } from "stream";
+import { Char } from "./Utils/String/Char";
+
+type FileCharIndices = { line: number; char: number; totalIndex: number };
 
 /**
  * Using streams to make reading a file more space efficient.
@@ -8,7 +11,7 @@ import { Writable } from "stream";
  */
 export function forEachCharInFile(
     path: string,
-    fn: (char: string, indices: { line: number; char: number; totalIndex: number }) => "continue" | "stop iteration"
+    fn: (char: Char, indices: FileCharIndices) => "continue" | "stop iteration"
 ): Promise<void> {
     return new Promise((resolve) => {
         let totalCount = 0;
@@ -26,7 +29,7 @@ export function forEachCharInFile(
                         const chunkStr = chunk.toString();
                         for (const char of chunkStr) {
                             if (inProgress) {
-                                const result = fn(char, { line: lineCount, char: charCount, totalIndex: totalCount });
+                                const result = fn(char as Char, { line: lineCount, char: charCount, totalIndex: totalCount });
                                 if (result === "stop iteration") {
                                     inProgress = false;
                                     resolve();
